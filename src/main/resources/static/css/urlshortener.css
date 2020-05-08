@@ -34,8 +34,10 @@ body {
 .form-url-shortener .form-control:focus {
   z-index: 2;
 }
+.form-url-shortener .form-row {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 .form-url-shortener input[type="text"] {
   margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
 }

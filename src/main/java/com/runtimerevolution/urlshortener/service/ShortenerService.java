@@ -5,18 +5,21 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 
+/**
+ * Shortener service, containing the rules to create short keys
+ * and get the full shortened URL
+ */
 @Component
 public class ShortenerService {
     @Autowired
     private HttpServletRequest request;
 
     public String getShortKeyFromId(Long id) {
-        final String firstKey = String.join("", id.toString(), new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
-        final byte[] keyByteArray = ByteBuffer.allocate(Long.SIZE / Byte.SIZE).putLong(Long.parseLong(firstKey)).array();
+        final Long sourceId = id + new Date().getTime();
+        final byte[] keyByteArray = ByteBuffer.allocate(Long.SIZE / Byte.SIZE).putLong(sourceId).array();
         return Base64.getUrlEncoder().encodeToString(keyByteArray).replaceAll("=", "");
     }
 

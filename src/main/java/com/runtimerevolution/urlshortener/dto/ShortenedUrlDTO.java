@@ -1,11 +1,16 @@
 package com.runtimerevolution.urlshortener.dto;
 
+import org.hibernate.validator.constraints.URL;
+
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
  * DTO for shortened URL
  */
 public class ShortenedUrlDTO implements Serializable {
+    @NotBlank(message = "{validation.url.blank}")
+    @URL(message = "{validation.url.invalid}")
     private String url;
     private String shortenedUrl;
 

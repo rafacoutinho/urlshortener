@@ -13,10 +13,11 @@
     <body class="text-center">
         <form action="#" th:action="@{/}" th:object="${shortenedUrl}" method="post" class="form-url-shortener">
             <h1 class="h3 mb-3 font-weight-normal" th:text="${appName}"/>
-            <p>
-                <input type="text" name="url" id="url" class="form-control" placeholder="Your URL here" th:field="*{url}" required autofocus />
-            </p>
-            <p><button class="btn btn-lg btn-primary btn-block" type="submit">Shorten your URL!</button></p>
+            <div class="form-row">
+                <input type="url" name="url" id="url" class="form-control" placeholder="Your URL here" th:field="*{url}" th:classappend="${errorMessage != null} ? is-invalid : ok" required autofocus>
+                <div class="invalid-feedback" th:if="${errorMessage != null}" th:text="${errorMessage}"></div>
+            </div>
+            <div class="form-row"><button class="btn btn-lg btn-primary btn-block" type="submit">Shorten your URL!</button></div>
         </form>
     </body>
 </html>
