@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 /**
  * Service for Url
  */
@@ -21,8 +23,8 @@ public class UrlService {
     @Autowired
     private ShortenerService shortenerService;
 
-    public ShortenedUrlDTO getShortenedUrlByShortKey(String shortKey) {
-        final Url url = urlRepository.findByShortKey(shortKey);
+    public ShortenedUrlDTO getShortenedUrlByShortKey(String shortKey) throws IllegalArgumentException {
+        final Url url = urlRepository.findOneByShortKey(shortKey).orElseThrow(IllegalArgumentException::new);
         final String shortenedUrl = shortenerService.getShortenedUrl(url.getShortKey());
 
         return new ShortenedUrlDTO(url.getOriginalUrl(), shortenedUrl);

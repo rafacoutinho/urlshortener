@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html  lang="en"
+       xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title th:text="${appName}"/>
+        <link href="../static/css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+        <link href="../static/css/urlshortener.css" rel="stylesheet" th:href="@{/css/urlshortener.css}"/>
+    </head>
+    <body class="text-center">
+        <div class="form-url-shortener">
+            <h1 class="h3 mb-3 font-weight-normal" th:text="${appName}"/>
+            <p>ERROR: Invalid URL!</p>
+        </div>
+    </body>
+</html>

@@ -2,6 +2,8 @@ package com.runtimerevolution.urlshortener.controller;
 
 import com.runtimerevolution.urlshortener.dto.ShortenedUrlDTO;
 import com.runtimerevolution.urlshortener.service.UrlService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,8 @@ import javax.validation.Valid;
  */
 @Controller
 public class UrlShortenerController {
+    Logger logger = LoggerFactory.getLogger(UrlShortenerController.class);
+
     @Value("${spring.application.name}")
     private String appName;
 
@@ -49,8 +53,14 @@ public class UrlShortenerController {
     }
 
     @GetMapping("/{shortKey}")
-    public ModelAndView redirectToShortenedUrl(@PathVariable String shortKey) {
-        ShortenedUrlDTO shortenedUrlDTO = urlService.getShortenedUrlByShortKey(shortKey);
-        return new ModelAndView("redirect:" + shortenedUrlDTO.getUrl());
+    public ModelAndView redirectToShortenedUrl(Model model, @PathVariable String shortKey) {
+        try {
+            ShortenedUrlDTO shortenedUrlDTO = urlService.getShortenedUrlByShortKey(shortKey);
+            return new ModelAndView("redirect:" + shortenedUrlDTO.getUrl());
+        } catch (IllegalArgumentException ex) {
+            logger.error("Invalid URL", ex);
+            model.addAttribute("appName", appName);
+            return new ModelAndView("error");
+        }
     }
 }
