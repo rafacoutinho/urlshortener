@@ -1,0 +1,1 @@
+CREATE TABLE url(id bigint auto_increment primary key, original_url varchar(255) not null, short_key varchar(20) unique);
