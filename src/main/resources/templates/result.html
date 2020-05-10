@@ -13,10 +13,10 @@
     <body class="text-center">
         <div class="form-url-shortener">
             <h1 class="h3 mb-3 font-weight-normal" th:text="${appName}"/>
-            <p>
+            <div class="alert alert-success">
                 Your shortened URL is: <br/>
-                <a href="" th:href="${shortenedUrl.shortenedUrl}" th:text="${shortenedUrl.shortenedUrl}"></a>
-            </p>
+                <strong><a href="" th:href="${shortenedUrl.shortenedUrl}" th:text="${shortenedUrl.shortenedUrl}"></a></strong>
+            </div>
         </div>
     </body>
 </html>

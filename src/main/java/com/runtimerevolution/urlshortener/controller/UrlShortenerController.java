@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 /**
@@ -38,24 +40,44 @@ public class UrlShortenerController {
     }
 
     @PostMapping("/")
-    public String formSubmit(Model model,
+    public String formSubmit(HttpServletRequest request,
+                             Model model,
                              @ModelAttribute @Valid ShortenedUrlDTO shortenedUrl,
                              BindingResult bindingResult) {
+        String errorMessage = "";
         model.addAttribute("appName", appName);
+
         if (bindingResult.hasErrors()) {
-            model.addAttribute("shortenedUrl", shortenedUrl);
-            model.addAttribute("errorMessage", bindingResult.getAllErrors().get(0).getDefaultMessage());
-            return "home";
+            return formSubmitError(model, shortenedUrl, bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
-        shortenedUrl = urlService.saveUrl(shortenedUrl.getUrl());
+
+        try {
+            shortenedUrl = urlService.saveUrl(request, shortenedUrl.getUrl().trim());
+            model.addAttribute("shortenedUrl", shortenedUrl);
+            return "result";
+        } catch (ConstraintViolationException cvex) {
+            logger.error("ConstraintViolationException", cvex);
+            errorMessage = cvex.getMessage();
+        } catch (Exception ex) {
+            logger.error("Generic Exception", ex);
+            errorMessage = "Unknown error";
+        }
+
+        return formSubmitError(model, shortenedUrl, errorMessage);
+    }
+
+    private String formSubmitError(Model model, ShortenedUrlDTO shortenedUrl, String errorMessage) {
         model.addAttribute("shortenedUrl", shortenedUrl);
-        return "result";
+        model.addAttribute("errorMessage", errorMessage);
+        return "home";
     }
 
     @GetMapping("/{shortKey}")
-    public ModelAndView redirectToShortenedUrl(Model model, @PathVariable String shortKey) {
+    public ModelAndView redirectToShortenedUrl(HttpServletRequest request,
+                                               Model model,
+                                               @PathVariable String shortKey) {
         try {
-            ShortenedUrlDTO shortenedUrlDTO = urlService.getShortenedUrlByShortKey(shortKey);
+            ShortenedUrlDTO shortenedUrlDTO = urlService.getShortenedUrlByShortKey(request, shortKey);
             return new ModelAndView("redirect:" + shortenedUrlDTO.getUrl());
         } catch (IllegalArgumentException ex) {
             logger.error("Invalid URL", ex);

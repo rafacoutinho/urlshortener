@@ -1,7 +1,13 @@
-package com.runtimerevolution.urlshortener.entity;
+package com.runtimerevolution.urlshortener.model;
+
+import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
+/**
+ * URL persistence entity
+ */
 @Entity
 @Table(name = "url")
 public class Url {
@@ -12,6 +18,8 @@ public class Url {
     private Long id;
 
     @Column(name = "original_url", nullable = false)
+    @NotBlank(message = "{validation.url.blank}")
+    @URL(message = "{validation.url.invalid}")
     private String originalUrl;
 
     @Column(name = "short_key", unique = true)

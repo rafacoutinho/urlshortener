@@ -9,21 +9,31 @@ import java.util.Base64;
 import java.util.Date;
 
 /**
- * Shortener service, containing the rules to create short keys
+ * Shortener service, containing the rules to generate short keys
  * and get the full shortened URL
  */
 @Component
 public class ShortenerService {
-    @Autowired
-    private HttpServletRequest request;
 
-    public String getShortKeyFromId(Long id) {
+    /**
+     * Given an URL ID, generates a new unique short key for the URL
+     * @param id the URL ID in DB
+     * @return the generated short key
+     */
+    public String generateShortKeyFromId(Long id) {
         final Long sourceId = id + new Date().getTime();
         final byte[] keyByteArray = ByteBuffer.allocate(Long.SIZE / Byte.SIZE).putLong(sourceId).array();
         return Base64.getUrlEncoder().encodeToString(keyByteArray).replaceAll("=", "");
     }
 
-    public String getShortenedUrl(String shortKey) {
-        return String.format("%s://%s:%d/%s", request.getScheme(), request.getServerName(), request.getServerPort(), shortKey);
+    /**
+     * Given a short key, returns the full shortened URL
+     * @param request the http request
+     * @param shortKey the short key
+     * @return the full shortened URL
+     */
+    public String getShortenedUrl(HttpServletRequest request, String shortKey) {
+        return String.format("%s://%s:%d/%s", request.getScheme(), request.getServerName(), request.getServerPort(), shortKey)
+                .replace(":80/", "/"); // replace port in URL if is the default (80)
     }
 }

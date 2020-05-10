@@ -1,6 +1,6 @@
 package com.runtimerevolution.urlshortener.repository;
 
-import com.runtimerevolution.urlshortener.entity.Url;
+import com.runtimerevolution.urlshortener.model.Url;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
