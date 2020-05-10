@@ -24,7 +24,7 @@ import javax.validation.Valid;
  */
 @Controller
 public class UrlShortenerController {
-    Logger logger = LoggerFactory.getLogger(UrlShortenerController.class);
+    private final Logger logger = LoggerFactory.getLogger(UrlShortenerController.class);
 
     @Value("${spring.application.name}")
     private String appName;
@@ -44,7 +44,7 @@ public class UrlShortenerController {
                              Model model,
                              @ModelAttribute @Valid ShortenedUrlDTO shortenedUrl,
                              BindingResult bindingResult) {
-        String errorMessage = "";
+        String errorMessage;
         model.addAttribute("appName", appName);
 
         if (bindingResult.hasErrors()) {
@@ -56,7 +56,7 @@ public class UrlShortenerController {
             model.addAttribute("shortenedUrl", shortenedUrl);
             return "result";
         } catch (ConstraintViolationException cvex) {
-            logger.error("ConstraintViolationException", cvex);
+            logger.error("Bean Validation Exception", cvex);
             errorMessage = cvex.getMessage();
         } catch (Exception ex) {
             logger.error("Generic Exception", ex);

@@ -83,9 +83,8 @@ public class UrlServiceTest {
         when(urlRepository.findOneByShortKey(SHORT_KEY_NOT_FOUND))
                 .thenReturn(Optional.empty());
 
-        final Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            urlService.getShortenedUrlByShortKey(mockHttpServletRequest, SHORT_KEY_NOT_FOUND);
-        });
+        final Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                urlService.getShortenedUrlByShortKey(mockHttpServletRequest, SHORT_KEY_NOT_FOUND));
 
         Assertions.assertNotNull(exception);
         Assertions.assertNull(exception.getMessage());
